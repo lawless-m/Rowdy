@@ -1,0 +1,22 @@
+# Rust
+/target/
+Cargo.lock
+
+# Voice models (large binary files)
+voices/*.onnx
+voices/*.onnx.json
+!voices/.gitkeep
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
