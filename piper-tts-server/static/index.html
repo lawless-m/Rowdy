@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piper TTS</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <main>
+        <h1>Piper TTS</h1>
+
+        <div class="input-group">
+            <label for="text">Text</label>
+            <textarea
+                id="text"
+                rows="6"
+                placeholder="Enter text to speak... Use [pause], [slow], [emphasis] etc."
+            ></textarea>
+            <div class="char-count"><span id="charCount">0</span> / 10000</div>
+        </div>
+
+        <div class="input-group">
+            <label for="voice">Voice</label>
+            <select id="voice">
+                <option value="">Loading voices...</option>
+            </select>
+        </div>
+
+        <div class="button-group">
+            <button id="speakBtn" type="button">Speak</button>
+            <button id="saveBtn" type="button" class="secondary" disabled>Save</button>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <audio id="player" controls></audio>
+
+        <details class="dsl-help">
+            <summary>DSL Reference</summary>
+            <table>
+                <tr><td><code>[pause]</code></td><td>Short pause</td></tr>
+                <tr><td><code>[pause:500]</code></td><td>Pause (milliseconds)</td></tr>
+                <tr><td><code>[slow]...[/slow]</code></td><td>Slower speech</td></tr>
+                <tr><td><code>[fast]...[/fast]</code></td><td>Faster speech</td></tr>
+                <tr><td><code>[emphasis]...[/emphasis]</code></td><td>Emphasise</td></tr>
+                <tr><td><code>[spell]...[/spell]</code></td><td>Spell out letters</td></tr>
+                <tr><td><code>[whisper]...[/whisper]</code></td><td>Whisper</td></tr>
+            </table>
+        </details>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>

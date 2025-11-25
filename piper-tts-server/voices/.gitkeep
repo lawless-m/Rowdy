@@ -1,0 +1,10 @@
+# Place Piper voice models here
+# Download from: https://github.com/rhasspy/piper/blob/master/VOICES.md
+#
+# Each voice requires two files:
+# - {voice_id}.onnx       - The ONNX model file
+# - {voice_id}.onnx.json  - The configuration file
+#
+# Example:
+# wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/alba/medium/en_GB-alba-medium.onnx
+# wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_GB/alba/medium/en_GB-alba-medium.onnx.json
