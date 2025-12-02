@@ -1,0 +1,22 @@
+#!/bin/bash
+# Speak text using Rowdy TTS server
+
+if [ $# -eq 0 ]; then
+    echo "Usage: speak <text>"
+    echo "Example: speak \"Hello, world\""
+    exit 1
+fi
+
+# Combine all arguments into one text string
+TEXT="$*"
+
+# Call TTS API with speak-aloud endpoint (server plays the audio)
+curl -s -X POST http://localhost:3000/api/speak-aloud \
+  -H "Content-Type: application/json" \
+  -d "{\"text\": \"$TEXT\", \"voice\": \"en_GB-alba-medium\"}"
+
+# Check if curl succeeded
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to send request to server"
+    exit 1
+fi

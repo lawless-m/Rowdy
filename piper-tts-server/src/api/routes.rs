@@ -25,6 +25,7 @@ pub fn create_router(state: Arc<AppState>) -> Router {
 
     let api_routes = Router::new()
         .route("/speak", post(handlers::speak))
+        .route("/speak-aloud", post(handlers::speak_aloud))
         .route("/voices", get(handlers::list_voices))
         .route("/health", get(handlers::health));
 

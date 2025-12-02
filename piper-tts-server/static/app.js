@@ -12,7 +12,7 @@ let lastText = '';
 // Load voices on startup
 async function loadVoices() {
     try {
-        const res = await fetch('/api/voices');
+        const res = await fetch('./api/voices');
         if (!res.ok) throw new Error('Failed to load voices');
 
         const data = await res.json();
@@ -60,7 +60,7 @@ async function speak() {
     showStatus('Generating...');
 
     try {
-        const res = await fetch('/api/speak', {
+        const res = await fetch('./api/speak', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text, voice }),

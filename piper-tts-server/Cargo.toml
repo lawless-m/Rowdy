@@ -21,6 +21,7 @@ serde_json = "1"
 
 # Audio processing
 hound = "3"
+rodio = "0.19"
 
 # Utilities
 thiserror = "1"

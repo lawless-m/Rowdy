@@ -1,0 +1,80 @@
+#!/bin/bash
+# Speak the current time using Rowdy in natural British English
+
+# Get current hour and minute
+HOUR=$(date +%-I)  # 1-12 format, no leading zero
+MINUTE=$(date +%-M)  # 0-59, no leading zero
+
+# Calculate next hour for "to" phrases
+NEXT_HOUR=$((HOUR + 1))
+if [ $NEXT_HOUR -eq 13 ]; then
+    NEXT_HOUR=1
+fi
+
+# Convert numbers to words
+number_to_word() {
+    case $1 in
+        1) echo "one" ;;
+        2) echo "two" ;;
+        3) echo "three" ;;
+        4) echo "four" ;;
+        5) echo "five" ;;
+        6) echo "six" ;;
+        7) echo "seven" ;;
+        8) echo "eight" ;;
+        9) echo "nine" ;;
+        10) echo "ten" ;;
+        11) echo "eleven" ;;
+        12) echo "twelve" ;;
+        13) echo "thirteen" ;;
+        14) echo "fourteen" ;;
+        15) echo "fifteen" ;;
+        16) echo "sixteen" ;;
+        17) echo "seventeen" ;;
+        18) echo "eighteen" ;;
+        19) echo "nineteen" ;;
+        20) echo "twenty" ;;
+        *) echo "$1" ;;
+    esac
+}
+
+HOUR_WORD=$(number_to_word $HOUR)
+NEXT_HOUR_WORD=$(number_to_word $NEXT_HOUR)
+
+# Build the time phrase
+if [ $MINUTE -eq 0 ]; then
+    TIME="$HOUR_WORD o'clock"
+elif [ $MINUTE -eq 1 ]; then
+    TIME="one minute past $HOUR_WORD"
+elif [ $MINUTE -ge 2 ] && [ $MINUTE -le 14 ]; then
+    MIN_WORD=$(number_to_word $MINUTE)
+    TIME="$MIN_WORD past $HOUR_WORD"
+elif [ $MINUTE -eq 15 ]; then
+    TIME="quarter past $HOUR_WORD"
+elif [ $MINUTE -ge 16 ] && [ $MINUTE -le 19 ]; then
+    MIN_WORD=$(number_to_word $MINUTE)
+    TIME="$MIN_WORD past $HOUR_WORD"
+elif [ $MINUTE -ge 20 ] && [ $MINUTE -le 29 ]; then
+    ONES=$((MINUTE - 20))
+    if [ $ONES -eq 0 ]; then
+        TIME="twenty past $HOUR_WORD"
+    else
+        ONES_WORD=$(number_to_word $ONES)
+        TIME="$ONES_WORD and twenty past $HOUR_WORD"
+    fi
+elif [ $MINUTE -eq 30 ]; then
+    TIME="half past $HOUR_WORD"
+elif [ $MINUTE -ge 31 ] && [ $MINUTE -le 44 ]; then
+    TO_MIN=$((60 - MINUTE))
+    TO_WORD=$(number_to_word $TO_MIN)
+    TIME="$TO_WORD to $NEXT_HOUR_WORD"
+elif [ $MINUTE -eq 45 ]; then
+    TIME="quarter to $NEXT_HOUR_WORD"
+elif [ $MINUTE -ge 46 ] && [ $MINUTE -le 59 ]; then
+    TO_MIN=$((60 - MINUTE))
+    TO_WORD=$(number_to_word $TO_MIN)
+    TIME="$TO_WORD to $NEXT_HOUR_WORD"
+fi
+
+# Speak it
+./speak "The time is $TIME"
