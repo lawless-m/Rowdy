@@ -7,7 +7,6 @@ use hound::{SampleFormat, WavSpec, WavWriter};
 use ort::session::builder::GraphOptimizationLevel;
 use ort::session::Session;
 use ort::value::Value;
-use ndarray::{Array1, Array2};
 
 use crate::error::AppError;
 use crate::tts::voice::Voice;
@@ -50,23 +49,19 @@ impl PiperEngine {
 
         // Prepare input tensors
         // input: [batch, sequence] = [1, phoneme_count]
-        let input_array = Array2::from_shape_vec((1, input_len), phoneme_ids.to_vec())
-            .map_err(|e| AppError::TtsError(format!("Failed to create input array: {}", e)))?;
-        let input_value = Value::from_array(input_array)
+        let input_value = Value::from_array((vec![1, input_len], phoneme_ids.to_vec()))
             .map_err(|e| AppError::TtsError(format!("Failed to create input tensor: {}", e)))?;
 
         // input_lengths: [batch] = [1]
-        let lengths_array = Array1::from_vec(vec![input_len as i64]);
-        let lengths_value = Value::from_array(lengths_array)
+        let lengths_value = Value::from_array((vec![1], vec![input_len as i64]))
             .map_err(|e| AppError::TtsError(format!("Failed to create lengths tensor: {}", e)))?;
 
         // scales: [3] = [noise_scale, length_scale, noise_w]
-        let scales_array = Array1::from_vec(vec![
+        let scales_value = Value::from_array((vec![3], vec![
             self.noise_scale,
             self.length_scale,
             self.noise_w,
-        ]);
-        let scales_value = Value::from_array(scales_array)
+        ]))
             .map_err(|e| AppError::TtsError(format!("Failed to create scales tensor: {}", e)))?;
 
         // Run inference

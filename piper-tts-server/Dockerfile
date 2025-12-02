@@ -1,12 +1,14 @@
 # Build stage
-FROM rust:1.75 as builder
+FROM rust:1.83-bookworm as builder
 
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies for building
 RUN apt-get update && apt-get install -y \
     espeak-ng \
     libespeak-ng-dev \
+    libasound2-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy manifests
@@ -20,15 +22,16 @@ RUN rm -rf src
 # Copy actual source
 COPY src ./src
 
-# Build for release
+# Build for release with all features
 RUN touch src/main.rs && cargo build --release
 
-# Runtime stage
-FROM debian:bookworm-slim
+# Runtime stage - Using Debian 11 (bullseye) to match your deployment target
+FROM debian:11-slim
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y \
     espeak-ng \
+    libasound2 \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 

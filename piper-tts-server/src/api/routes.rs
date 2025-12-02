@@ -23,9 +23,16 @@ pub fn create_router(state: Arc<AppState>) -> Router {
         .allow_methods([Method::GET, Method::POST])
         .allow_headers([header::CONTENT_TYPE]);
 
+    #[cfg(feature = "audio-playback")]
     let api_routes = Router::new()
         .route("/speak", post(handlers::speak))
-        .route("/speak-aloud", post(handlers::speak_aloud))
+        .route("/voices", get(handlers::list_voices))
+        .route("/health", get(handlers::health))
+        .route("/speak-aloud", post(handlers::speak_aloud));
+
+    #[cfg(not(feature = "audio-playback"))]
+    let api_routes = Router::new()
+        .route("/speak", post(handlers::speak))
         .route("/voices", get(handlers::list_voices))
         .route("/health", get(handlers::health));
 

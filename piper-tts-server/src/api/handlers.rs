@@ -4,7 +4,9 @@ use axum::{
     response::{IntoResponse, Response},
     Json,
 };
+#[cfg(feature = "audio-playback")]
 use rodio::Source;
+#[cfg(feature = "audio-playback")]
 use std::io::Cursor;
 use std::sync::Arc;
 
@@ -38,6 +40,7 @@ pub async fn speak(
     Ok((StatusCode::OK, [(header::CONTENT_TYPE, "audio/wav")], wav).into_response())
 }
 
+#[cfg(feature = "audio-playback")]
 pub async fn speak_aloud(
     State(state): State<Arc<AppState>>,
     Json(request): Json<SpeakRequest>,
@@ -80,6 +83,7 @@ pub async fn list_voices(
     Ok(Json(VoicesResponse { voices }))
 }
 
+#[cfg(feature = "audio-playback")]
 fn play_audio(wav_data: Vec<u8>) -> Result<(), Box<dyn std::error::Error>> {
     let (_stream, stream_handle) = rodio::OutputStream::try_default()?;
     let cursor = Cursor::new(wav_data.clone());

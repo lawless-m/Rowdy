@@ -2,7 +2,72 @@
 
 ## Overview
 
-This guide covers deploying the Piper TTS server to a remote server and setting up a local proxy for audio playback.
+This guide covers deploying the Piper TTS server using Docker or traditional deployment methods.
+
+## Docker Deployment (Recommended for Debian 11)
+
+The Docker deployment builds on Debian Bookworm (12) and runs on Debian 11 (Bullseye), avoiding glibc compatibility issues.
+
+### Prerequisites
+
+- Docker installed on your system
+- Docker Compose (optional, for easier management)
+
+### 1. Build and Run with Docker Compose
+
+```bash
+# Build and start the container
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the container
+docker-compose down
+```
+
+### 2. Build and Run with Docker directly
+
+```bash
+# Build the image
+docker build -t piper-tts-server:latest .
+
+# Run the container
+docker run -d \
+  --name piper-tts \
+  -p 3000:3000 \
+  -v ./voices:/app/voices:ro \
+  -e RUST_LOG=info \
+  --restart unless-stopped \
+  piper-tts-server:latest
+
+# View logs
+docker logs -f piper-tts
+
+# Stop the container
+docker stop piper-tts
+docker rm piper-tts
+```
+
+### 3. Accessing the Service
+
+Once running, the service will be available at:
+- **Web Interface**: http://localhost:3000/
+- **API Endpoints**:
+  - `POST http://localhost:3000/api/speak` - Generate and download WAV
+  - `POST http://localhost:3000/api/speak-aloud` - Generate and play on server (if audio-playback feature enabled)
+  - `GET http://localhost:3000/api/voices` - List available voices
+  - `GET http://localhost:3000/api/health` - Health check
+
+### 4. Place Voice Models
+
+Before starting the container, place your voice model files in the `voices/` directory:
+
+```bash
+mkdir -p voices
+cp /path/to/your/*.onnx voices/
+cp /path/to/your/*.onnx.json voices/
+```
 
 ## Remote Server Deployment
 
